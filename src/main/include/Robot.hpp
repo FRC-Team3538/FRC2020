@@ -34,7 +34,8 @@ private:
   AutoPrograms autoPrograms{IO};
   LiveWindow &m_lw = *frc::LiveWindow::GetInstance();
 
-  const double deadband = 0.1;
+  const double deadband = 0.05;
+  double rotateMax = 0.7;
 
   // Dont update smart dash every loop
   int smartDashSkip = 0;

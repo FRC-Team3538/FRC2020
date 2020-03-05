@@ -14,6 +14,10 @@ void Robot::RobotInit()
 {
   IO.drivebase.ResetEncoders();
   IO.drivebase.ResetGyro();
+
+  
+   SmartDashboard::PutNumber("Rotate Max", rotateMax);
+   SmartDashboard::SetPersistent("Rotate Max");
 }
 
 void Robot::RobotPeriodic()
@@ -53,8 +57,8 @@ void Robot::DisabledInit()
 void Robot::TeleopPeriodic()
 {
   // Drive
-  double forward = Deadband(IO.ds.Driver.GetY(GenericHID::kLeftHand) * -1, deadband);
-  double rotate = Deadband(IO.ds.Driver.GetX(GenericHID::kRightHand) * -1, deadband);
+  double forward = Deadband(IO.ds.Driver.GetY(GenericHID::kLeftHand) * -1.0, deadband);
+  double rotate = Deadband(IO.ds.Driver.GetX(GenericHID::kRightHand) * -1.0 * rotateMax, deadband);
 
   IO.drivebase.Arcade(forward, rotate);
  
@@ -137,6 +141,13 @@ void Robot::UpdateSD()
     IO.manip.UpdateSmartdash();
     break;
   }
+  case 10:
+  {
+    rotateMax = SmartDashboard::GetNumber("Rotate Max", rotateMax);
+    break;
+  }
+
+  
 
   }
 
