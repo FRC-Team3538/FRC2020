@@ -52,43 +52,12 @@ void Robot::DisabledInit()
 
 void Robot::TeleopPeriodic()
 {
-
-  // Drive Mode
-  if (IO.ds.Driver.GetOptionsButtonPressed())
-  {
-    if (driveMode == SplitArcade)
-    {
-      driveMode = Tank;
-    }
-    else if (driveMode == Tank)
-    {
-      driveMode = Mecanum;
-    }
-    else if (driveMode == Mecanum)
-    {
-      driveMode = SplitArcade;
-    }
-  }
-
   // Drive
   double forward = Deadband(IO.ds.Driver.GetY(GenericHID::kLeftHand) * -1, deadband);
   double rotate = Deadband(IO.ds.Driver.GetX(GenericHID::kRightHand) * -1, deadband);
-  double forwardR = Deadband(IO.ds.Driver.GetY(GenericHID::kRightHand) * -1, deadband);
-  double strafe = Deadband(IO.ds.Driver.GetX(GenericHID::kLeftHand), deadband);
 
-  if (driveMode == SplitArcade)
-  {
-    IO.drivebase.Arcade(forward, rotate);
-  }
-  else if (driveMode == Tank)
-  {
-    IO.drivebase.Tank(forward, forwardR);
-  }
-  else if (driveMode == Mecanum)
-  {
-    IO.drivebase.Mecanum(forward, rotate, strafe);
-  }
-
+  IO.drivebase.Arcade(forward, rotate);
+ 
   // Shifting
   if (IO.ds.Driver.GetBumper(GenericHID::kLeftHand))
   {
@@ -103,10 +72,22 @@ void Robot::TeleopPeriodic()
   // Manip
   double leftTrigDr = IO.ds.Driver.GetTriggerAxis(GenericHID::kLeftHand);
   double rightTrigDr = IO.ds.Driver.GetTriggerAxis(GenericHID::kRightHand);
-  double leftTrigOp = IO.ds.Operator.GetTriggerAxis(GenericHID::kLeftHand);
-  double rightTrigOp = IO.ds.Operator.GetTriggerAxis(GenericHID::kRightHand);
-  //IO.manip.SetA(leftTrigDr - rightTrigDr + leftTrigOp - rightTrigOp);
+  IO.manip.SetA(leftTrigDr - rightTrigDr);
+  IO.manip.SetB(leftTrigDr - rightTrigDr);
 
+  if (IO.ds.Driver.GetCrossButton() | IO.ds.Operator.GetCrossButton())
+  {
+    IO.manip.SetC(1.0);
+    IO.manip.SetD(1.0);
+  }
+
+  if ( IO.ds.Driver.GetCircleButton() |  IO.ds.Operator.GetCircleButton())
+  {
+    IO.manip.SetC(0.0);
+    IO.manip.SetD(0.0);
+  }
+  
+  // Solenoids
   IO.manip.SetSol1(IO.ds.Driver.GetSquareButton() | IO.ds.Operator.GetSquareButton());
 
   if (IO.ds.Driver.GetTriangleButton() | IO.ds.Operator.GetTriangleButton())
@@ -114,22 +95,10 @@ void Robot::TeleopPeriodic()
     IO.manip.ToggleSol2();
   }
 
-  if (IO.ds.Driver.GetCrossButton() | IO.ds.Operator.GetCrossButton())
-  {
-    IO.manip.SetA(1.0);
-    IO.manip.SetB(1.0);
-    IO.manip.SetC(1.0);
-    IO.manip.SetD(1.0);
-  }
 
-  if ( IO.ds.Driver.GetCircleButton() |  IO.ds.Operator.GetCircleButton())
-  {
-    IO.manip.SetA(0.0);
-    IO.manip.SetB(0.0);
-    IO.manip.SetC(0.0);
-    IO.manip.SetD(0.0);
-  }
 }
+
+
 
 double Robot::Deadband(double input, double deadband)
 {
@@ -160,19 +129,10 @@ void Robot::UpdateSD()
   {
   case 0:
   {
-    IO.drivebase.SensorOverride( IO.ds.chooseDriveLimit.GetSelected() == IO.ds.sUnlimitted );
-    break;
-  }
-
-  case 2:
-  {
     IO.drivebase.UpdateSmartdash();
-
-    SmartDashboard::PutNumber("DriveMode", driveMode);
     break;
   }
-
-  case 3:
+  case 5:
   {
     IO.manip.UpdateSmartdash();
     break;

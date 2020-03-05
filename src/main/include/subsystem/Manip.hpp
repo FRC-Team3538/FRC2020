@@ -13,18 +13,11 @@ class Manip
   private:
 
     // PWM
-    PWMTalonSRX motorA1PWM{6};
-    PWMTalonSRX motorA2PWM{7};
-    PWMTalonSRX motorB1PWM{8};
-    PWMTalonSRX motorB2PWM{9};
+    PWMTalonSRX motorA{9};
+    PWMTalonSRX motorB{8};
+    PWMTalonSRX motorC{7};
+    PWMTalonSRX motorD{6};
 
-    // CTRE CAN
-    WPI_VictorSPX motorA {6};
-    WPI_VictorSPX motorB {7};
-    WPI_VictorSPX motorC {21};
-    WPI_VictorSPX motorD {22};
-    //WPI_TalonSRX motorB1 {8};
-    //WPI_TalonSRX motorB2 {9};
 
     // Solenoids
     Solenoid sol1{1};

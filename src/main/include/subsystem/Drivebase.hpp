@@ -42,20 +42,10 @@ private:
 
 
   // Talon
-  WPI_TalonSRX motorLeft1{motors::L1};
-  WPI_VictorSPX motorLeft2{motors::L2};
-  WPI_VictorSPX motorLeft3{motors::L3};
-
-  WPI_TalonSRX motorRight1{motors::R1};
-  WPI_VictorSPX motorRight2{motors::R2};
-  WPI_VictorSPX motorRight3{motors::R3};
+  
 
   // NEO
-  // CANSparkMax motorRev1{20, CANSparkMax::MotorType::kBrushless};
-  // CANSparkMax motorRev2{21, CANSparkMax::MotorType::kBrushless};
-
-  // CANSparkMax motorRev1R{22, CANSparkMax::MotorType::kBrushless};
-  // CANSparkMax motorRev2R{23, CANSparkMax::MotorType::kBrushless};
+  
 
   Solenoid solenoidShifter{0};
 
